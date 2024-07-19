@@ -1,6 +1,11 @@
 import { Button, Box, Typography } from "@mui/material";
+import Link from "next/link";
 
-export default function Product({ brand, image, id }) {
+export default function Item({ brand, image, id }) {
+  const brandToUrl = encodeURIComponent(brand)
+    .replaceAll("%20", "-")
+    .toLowerCase();
+
   return (
     <Box
       component="li"
@@ -10,16 +15,19 @@ export default function Product({ brand, image, id }) {
         bgcolor: "white",
         borderRadius: "12px 32px 12px 12px",
         "&:hover": {
-          bgcolor: "#eee",
+          outline: "1px solid #eee",
+          cursor: "pointer",
         },
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
       }}
     >
-      <Typography variant="subtitle1" sx={{ textAlign: "center", p: 1 }}>
-        {brand}
-      </Typography>
+      <Link href={`/product/${id}-${brandToUrl}`}>
+        <Typography variant="subtitle1" sx={{ textAlign: "center", p: 1 }}>
+          {brand}
+        </Typography>
+      </Link>
 
       <Box
         sx={{
@@ -29,7 +37,7 @@ export default function Product({ brand, image, id }) {
           "& img": { width: "fit-content", height: "90%" },
         }}
       >
-        <img src={`/images/${image}`} alt="Modelo Especial" />
+        <img src={`/images/${image}`} alt={brand} />
       </Box>
 
       <Box
@@ -46,7 +54,7 @@ export default function Product({ brand, image, id }) {
           variant="primary"
           sx={{
             width: "40px",
-            height: "40px",
+            height: "36px",
             minWidth: "40px",
             borderRadius: "8px 0px 8px 0px",
             fontSize: "1.6rem",

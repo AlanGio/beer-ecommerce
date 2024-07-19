@@ -1,5 +1,5 @@
 import products from "../apis/products";
-import Product from "../components/product";
+import Item from "../components/item";
 
 import { Container, Box, Typography, ThemeProvider } from "@mui/material";
 import Header from "../components/header";
@@ -8,7 +8,7 @@ import { theme } from "../setup/theme";
 export default function Home() {
   return (
     <ThemeProvider theme={theme}>
-      <Container sx={{ backgroundColor: "#FAFAFA" }}>
+      <Container>
         <Header />
         <Box sx={{ gap: 2, display: "flex", flexDirection: "column", p: 2 }}>
           <Typography variant="subtitle1">Hi Mr. Michael,</Typography>
@@ -26,8 +26,9 @@ export default function Home() {
             }}
           >
             {products.map((product) => (
-              <Product
+              <Item
                 key={product.id}
+                id={product.id}
                 image={product.image}
                 brand={product.brand}
               />
