@@ -8,7 +8,7 @@ import { theme } from "../setup/theme";
 export default function Home() {
   return (
     <ThemeProvider theme={theme}>
-      <Container>
+      <Container sx={{ minWidth: 420 }}>
         <Header />
         <Box sx={{ gap: 2, display: "flex", flexDirection: "column", p: 2 }}>
           <Typography variant="subtitle1">Hi Mr. Michael,</Typography>
@@ -23,6 +23,7 @@ export default function Home() {
               gap: 2,
               flexWrap: "wrap",
               "& > li": { flex: "calc(50% - 16px)" },
+              justifyContent: "center",
             }}
           >
             {products.map((product) => (

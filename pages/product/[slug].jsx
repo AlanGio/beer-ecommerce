@@ -1,18 +1,12 @@
 import productStock from "../../apis/stock-price.js";
 import products from "../../apis/products";
 
+import Footer from "../../components/footer";
+
 import { useRouter } from "next/router";
 const { useState, useEffect } = require("react");
 
-import {
-  Box,
-  Button,
-  Container,
-  Chip,
-  Typography,
-  ThemeProvider,
-  IconButton,
-} from "@mui/material";
+import { Box, Container, Chip, Typography, ThemeProvider } from "@mui/material";
 import Header from "../../components/header";
 import { theme } from "../../setup/theme";
 
@@ -55,7 +49,7 @@ export default function Home() {
       <Container>
         <Header leftButton="back" rightButton="more" title="Detail" />
 
-        {product ? (
+        {product && stock ? (
           <>
             <Box
               sx={{
@@ -74,7 +68,9 @@ export default function Home() {
               />
             </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 14 }}
+            >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="h2">{product.brand}</Typography>
                 <Typography variant="h2" sx={{ color: "primary.main" }}>
@@ -105,39 +101,7 @@ export default function Home() {
               </Box>
             </Box>
 
-            <Box
-              position="fixed"
-              color="primary"
-              sx={{
-                top: "auto",
-                bottom: 0,
-                display: "flex",
-                alignItems: "center",
-                width: "calc(100% - 50px)",
-                gap: 2,
-              }}
-            >
-              <IconButton
-                color="secondary"
-                aria-label="add an alarm"
-                sx={{ flex: 0 }}
-              >
-                <img src="/images/add-to-bag.svg" alt="Back" />
-              </IconButton>
-              <Button
-                variant="contained"
-                disableElevation
-                size="large"
-                sx={{
-                  borderRadius: 3,
-                  p: 1.8,
-                  flex: 2,
-                  textTransform: "none",
-                }}
-              >
-                Add to cart
-              </Button>
-            </Box>
+            <Footer />
           </>
         ) : (
           <Typography variant="h2">Loading...</Typography>
