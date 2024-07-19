@@ -1,6 +1,16 @@
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 
 export default function Header({ leftButton, rightButton, title }) {
+  const router = useRouter();
+
+  const topLeftButton = () => {
+    if (leftButton === "back") {
+      return router.back();
+    } else {
+      return router.push("/products");
+    }
+  };
   return (
     <Box
       sx={{
@@ -10,7 +20,7 @@ export default function Header({ leftButton, rightButton, title }) {
         pt: 2,
       }}
     >
-      <IconButton aria-label="delete" size="small">
+      <IconButton aria-label="delete" size="small" onClick={topLeftButton}>
         {leftButton === "back" ? (
           <img src="/images/back.svg" alt="Back" />
         ) : (

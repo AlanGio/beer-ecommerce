@@ -1,4 +1,4 @@
-import stock from "../../apis/stock-price.js";
+import productStock from "../../apis/stock-price.js";
 import products from "../../apis/products";
 
 import { useRouter } from "next/router";
@@ -16,24 +16,39 @@ import {
 import Header from "../../components/header";
 import { theme } from "../../setup/theme";
 
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+
+  // These options are needed to round to whole numbers if that's what you want.
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
 export default function Home() {
   const router = useRouter();
-  const [size, setSize] = useState("12 - 24oz");
   const [product, setProduct] = useState(null);
+  const [stock, setStock] = useState(null);
+  const [size, setSize] = useState(null);
 
   const itemId = router.query.slug && router.query.slug.split("-")[0];
-  console.log(itemId);
 
   useEffect(() => {
     if (itemId) {
       const findProd = products.find((item) => item.id.toString() === itemId);
       findProd && setProduct(findProd);
+
+      if (findProd) {
+        const findStock = productStock[Number(findProd.skus[0].code)];
+        findStock && setStock(findStock);
+        setSize(findProd.skus[0].code);
+      }
     }
   }, [itemId]);
 
-  console.log(product, "product!!");
-
-  product && console.log();
+  useEffect(() => {
+    setStock(productStock[size]);
+  }, [size]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,11 +78,11 @@ export default function Home() {
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant="h2">{product.brand}</Typography>
                 <Typography variant="h2" sx={{ color: "primary.main" }}>
-                  $36.90
+                  {formatter.format(stock.price)}
                 </Typography>
               </Box>
               <Typography variant="subtitle1">
-                Origin: {product.origin} | Stock: 456
+                Origin: {product.origin} | Stock: {stock.stock}
               </Typography>
 
               <Typography variant="h3" sx={{ mt: 2 }}>
