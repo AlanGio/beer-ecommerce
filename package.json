@@ -10,6 +10,8 @@
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.16.4",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "axios": "^1.7.2",
+    "axios-hooks": "^5.0.2",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "18.2.0",

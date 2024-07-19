@@ -1,14 +1,21 @@
 import productStock from "../../apis/stock-price.js";
-import products from "../../apis/products";
 
 import Footer from "../../components/footer";
 
 import { useRouter } from "next/router";
 const { useState, useEffect } = require("react");
 
-import { Box, Container, Chip, Typography, ThemeProvider } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Chip,
+  Typography,
+  ThemeProvider,
+} from "@mui/material";
 import Header from "../../components/header";
 import { theme } from "../../setup/theme";
+import { getProducts } from "../../setup/connection";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -21,35 +28,65 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 export default function Home() {
   const router = useRouter();
-  const [product, setProduct] = useState(null);
   const [stock, setStock] = useState(null);
   const [size, setSize] = useState(null);
-
   const itemId = router.query.slug && router.query.slug.split("-")[0];
 
   useEffect(() => {
-    if (itemId) {
-      const findProd = products.find((item) => item.id.toString() === itemId);
-      findProd && setProduct(findProd);
-
-      if (findProd) {
-        const findStock = productStock[Number(findProd.skus[0].code)];
-        findStock && setStock(findStock);
-        setSize(findProd.skus[0].code);
-      }
+    if (router.isReady) {
+      // Code using query
+      console.log(router.query);
     }
+  }, [router.isReady]);
+
+  const [{ data: product, loading, error }, refetch] = getProducts(
+    `/?id=${itemId}`
+  );
+
+  useEffect(() => {
+    itemId && refetch();
   }, [itemId]);
 
   useEffect(() => {
     setStock(productStock[size]);
   }, [size]);
 
+  useEffect(() => {
+    if (product && product.skus) {
+      const findStock = productStock[Number(product.skus[0].code)];
+      findStock && setStock(findStock);
+      setSize(product.skus[0].code);
+    }
+  }, [product]);
+
+  if (loading) {
+    return (
+      <CircularProgress
+        sx={{
+          position: "absolute",
+          top: "calc(50% - 25px)",
+          left: "calc(50% - 25px)",
+        }}
+      />
+    );
+  }
+
+  if (error) {
+    return (
+      <pre>
+        <h3>Error</h3>
+        <h4>Status code: {error?.response.status}</h4>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+      </pre>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Header leftButton="back" rightButton="more" title="Detail" />
 
-        {product && stock ? (
+        {product && stock && (
           <>
             <Box
               sx={{
@@ -103,8 +140,6 @@ export default function Home() {
 
             <Footer />
           </>
-        ) : (
-          <Typography variant="h2">Loading...</Typography>
         )}
       </Container>
     </ThemeProvider>
