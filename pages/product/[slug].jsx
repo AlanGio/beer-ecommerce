@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Header from "../../components/header";
 import { theme } from "../../setup/theme";
-import { getProducts } from "../../setup/connection";
+import { getProducts, getSku } from "../../setup/connection";
 
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -40,26 +40,32 @@ export default function Home() {
   }, [router.isReady]);
 
   const [{ data: product, loading, error }, refetch] = getProducts(
-    `/?id=${itemId}`
+    `/?id=${itemId}`,
+    { manual: !itemId }
   );
+
+  const [{ data: sku, loading: loadingSku, error: errorSku }, refetchSku] =
+    getSku(`/?sku=${size}`, { manual: !size });
 
   useEffect(() => {
     itemId && refetch();
   }, [itemId]);
 
   useEffect(() => {
-    setStock(productStock[size]);
+    size && refetchSku();
   }, [size]);
 
   useEffect(() => {
+    setStock(sku);
+  }, [sku]);
+
+  useEffect(() => {
     if (product && product.skus) {
-      const findStock = productStock[Number(product.skus[0].code)];
-      findStock && setStock(findStock);
       setSize(product.skus[0].code);
     }
   }, [product]);
 
-  if (loading) {
+  if (loading || loadingSku) {
     return (
       <CircularProgress
         sx={{
@@ -71,7 +77,7 @@ export default function Home() {
     );
   }
 
-  if (error) {
+  if (error || errorSku) {
     return (
       <pre>
         <h3>Error</h3>
