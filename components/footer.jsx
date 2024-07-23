@@ -1,6 +1,6 @@
 import { Box, Button, IconButton } from "@mui/material";
 
-export default function Footer() {
+export default function Footer({ brand, sku, price }) {
   return (
     <Box
       position="fixed"
@@ -10,9 +10,11 @@ export default function Footer() {
         bottom: 0,
         display: "flex",
         alignItems: "center",
-        width: "calc(100% - 50px)",
+        width: "92%",
         gap: 2,
         backgroundColor: "white",
+        maxWidth: 1200,
+        minWidth: 420,
       }}
     >
       <IconButton color="secondary" aria-label="add an alarm" sx={{ flex: 0 }}>
@@ -22,7 +24,7 @@ export default function Footer() {
         variant="contained"
         disableElevation
         size="large"
-        onClick={() => alert("Product added to cart")}
+        onClick={() => alert(`Added ${brand} [${sku}] (${price}) to cart`)}
         sx={{
           borderRadius: 3,
           p: 1.8,

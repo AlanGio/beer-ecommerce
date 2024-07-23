@@ -1,5 +1,3 @@
-import productStock from "../../apis/stock-price.js";
-
 import Footer from "../../components/footer";
 
 import { useRouter } from "next/router";
@@ -89,10 +87,10 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container>
+      <Container sx={{ minWidth: 420 }}>
         <Header leftButton="back" rightButton="more" title="Detail" />
 
-        {product && stock && (
+        {product && (
           <>
             <Box
               sx={{
@@ -114,15 +112,21 @@ export default function Home() {
             <Box
               sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 14 }}
             >
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography variant="h2">{product.brand}</Typography>
-                <Typography variant="h2" sx={{ color: "primary.main" }}>
-                  {formatter.format(stock.price)}
-                </Typography>
-              </Box>
-              <Typography variant="subtitle1">
-                Origin: {product.origin} | Stock: {stock.stock}
-              </Typography>
+              {stock && (
+                <>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="h2">{product.brand}</Typography>
+                    <Typography variant="h2" sx={{ color: "primary.main" }}>
+                      {formatter.format(stock.price)}
+                    </Typography>
+                  </Box>
+                  <Typography variant="subtitle1">
+                    Origin: {product.origin} | Stock: {stock.stock}
+                  </Typography>
+                </>
+              )}
 
               <Typography variant="h3" sx={{ mt: 2 }}>
                 Description
@@ -132,19 +136,27 @@ export default function Home() {
               <Typography variant="h3" sx={{ mt: 2 }}>
                 Size
               </Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                {product.skus.map((sku) => (
-                  <Chip
-                    label={sku.name}
-                    variant="outlined"
-                    color={size === sku.code ? "primary" : "default"}
-                    onClick={() => setSize(sku.code)}
-                  />
-                ))}
-              </Box>
-            </Box>
 
-            <Footer />
+              {stock && (
+                <>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    {product.skus.map((sku) => (
+                      <Chip
+                        label={sku.name}
+                        variant="outlined"
+                        color={size === sku.code ? "primary" : "default"}
+                        onClick={() => setSize(sku.code)}
+                      />
+                    ))}
+                  </Box>
+                  <Footer
+                    brand={product.brand}
+                    sku={size}
+                    price={formatter.format(stock.price)}
+                  />
+                </>
+              )}
+            </Box>
           </>
         )}
       </Container>

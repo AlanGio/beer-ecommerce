@@ -1,4 +1,4 @@
-import stock from "../../apis/stock-price";
+import stock from "../../mocks/stock-price";
 
 export default function handler(req, res) {
   const { sku } = req.query;

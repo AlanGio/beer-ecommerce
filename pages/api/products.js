@@ -1,4 +1,4 @@
-import products from "../../apis/products";
+import products from "../../mocks/products";
 
 export default function handler(req, res) {
   const { id } = req.query;
